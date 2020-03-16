@@ -1,0 +1,32 @@
+@charset "UTF-8";
+
+/* 여백 초기화  h1~h6, table관련 요소 제외*/
+body,div,ul,li,dl,dd,dt,ol,input,
+fieldset,legend,p,select,textarea,table,th,tr,td,button,form,figure,figcaption{
+    margin:0; padding:0;}
+
+/* a 링크 초기화 */
+a {text-decoration: none; color:#000 !important;}
+a:hover {color: #000;}
+
+/* 폰트 초기화 */
+body, input, textarea, select, button, table { font-family: 'Noto Sans KR', sans-serif; }
+
+/* 폰트 스타일 초기화 */
+em,address {font-style: normal;}
+
+/* 블릿기호 초기화 */
+ul,li,ol {list-style:none;}
+
+/* h1~h6 제외 */
+
+/* 테두리 초기화 */
+img,fieldset {border:0 none;}
+
+/* 버튼 초기화 */
+button {border: 0;}
+
+/* clearfix */
+.clearfix{*zoom:1;}
+.clearfix:before, .clearfix:after {display: block; content: '';line-height: 0;}
+.clearfix:after {clear: both;}

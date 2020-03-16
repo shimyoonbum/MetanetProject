@@ -1,0 +1,90 @@
+@charset "UTF-8";
+
+body{
+     box-sizing: border-box;
+     word-break : break-all;
+     background: #f6f6f6; 
+}
+
+/* 상단바 헤더로 정의해서 화면 고정 처리*/
+header{position : fixed; top : 0; left : 0; right : 0; z-index : 1;}
+
+/*상단 바 width:100%; position:fixed;*/
+#container {background: #0C4DA2; display: flex; box-shadow: 0 1px 10px rgba(0,0,0,1);}
+
+#box-left {flex: 1; padding:10px 10px 10px 20px; font-size: 30px; }
+#box-center{flex: 3; text-align: center; padding:10px; text-transform: uppercase; }
+#box-right{flex: 1; text-align:right; padding: 10px 20px 10px 10px; }
+
+.containerdetail{padding : 50px 30px 0px 30px;}
+
+/* datepicker 부분 관련 css*/
+.date{display: flex; padding-bottom : 10px}
+#search{flex : 5; margin-left : 15px; padding-top : 8px; font-weight : 700; text-align : center;}
+#datepicker{flex : 1; width : 100px}
+#blank{flex : 5;}
+#searchdate{flex : 1; margin-left : 10px;}
+#plus{flex : 1; margin-right : 15px;}
+
+/*페이지 제목 위치 관련 css*/
+.title{padding-top:80px; padding-bottom:10px; text-align:center; font-weight: 600; margin-right : 10px;}
+
+/*버튼 오른쪽 가도록 설정*/
+.btn{float : right; margin-left : 7px;}
+
+.btnback{margin-right : 10px;}
+
+/*테이블 관련 요소*/
+.table>thead>tr>th{border:3px solid #eee; text-align: center; background: lightcyan; font-size: 10px;}
+.table>tbody>tr>td{border:3px solid #eee; text-align: center; font-size: 11px;}
+.table>thead:first-child>tr:first-child>th{border-top : 2px solid #eee;}
+
+/*사이드 바  width:100%; position:fixed;*/
+.sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 11;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  color : white !important;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+/*사이드바 메뉴 관련 css*/
+.sidenav .menu {  
+  color : white !important;
+  font-size: 20px;
+  margin-left: 20px;
+  padding-top: 25px;
+  font-weight : 500;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}

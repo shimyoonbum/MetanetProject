@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!-- mapper 클래스 선언 -->
+<mapper namespace="com.metanet.project.mapper.JournalMapper">
+ 	    
+    <!-- 일지 목록 -->
+    <select id="journalList" resultType="com.metanet.project.dto.JournalDTO">
+        select
+            no, title
+        from journal
+        where	substr(date,1,10) = #{date}
+    </select>
+    
+    <!-- 일지 세부 사항  -->
+    <select id="detail" parameterType="int" resultType="com.metanet.project.dto.JournalDTO">
+        select
+            *
+        from journal
+        where
+            no = #{no}
+    </select>
+    
+    <!-- 일지 기록 -->
+    <insert id="journalInsert" parameterType="com.metanet.project.dto.JournalDTO">
+        insert into
+        journal (title, action, planned, description)
+        values(#{title},#{action},#{planned},#{description}) 
+    </insert>
+    
+    <!-- 일지 수정 -->
+    <update id="journalUpdate" parameterType="com.metanet.project.dto.JournalDTO">
+        update journal
+            set
+            action = #{action},
+            planned = #{planned},
+            description = #{description}
+        where no = #{no}
+    </update>
+    
+    <!-- 일지 삭제 -->
+    <delete id="journalDelete" parameterType="int">
+        delete from journal where no = #{no}
+    </delete>
+
+</mapper>
