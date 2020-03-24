@@ -26,14 +26,23 @@ header{position : fixed; top : 0; left : 0; right : 0; z-index : 1;}
 #searchdate{flex : 1; margin-left : 10px;}
 #plus{flex : 1; margin-right : 15px;}
 
+/*첨부파일 관련 css */
+#fileinfo{display: flex;}
+#filename{display: none;}
+#filerealname{flex:100; display: none;}
+#filedelete{flex:1; padding-top:5px; display:none;}
+#fileno{display:none;}
+#fileupdate{padding-top : 10px; display:none;}
+
+/*썸네일 관련 css */
+#img{width:200; height:200;}
+#imgupdate{width:200; height:200; margin-top:20px}
 /*페이지 제목 위치 관련 css*/
 .title{padding-top:80px; padding-bottom:10px; text-align:center; font-weight: 600; margin-right : 10px;}
 
 /*버튼 오른쪽 가도록 설정*/
 .btn{float : right; margin-left : 7px;}
-
 .btnback{margin-right : 10px;}
-
 /*테이블 관련 요소*/
 .table>thead>tr>th{border:3px solid #eee; text-align: center; background: lightcyan; font-size: 10px;}
 .table>tbody>tr>td{border:3px solid #eee; text-align: center; font-size: 11px;}

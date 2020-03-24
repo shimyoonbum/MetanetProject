@@ -10,9 +10,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <!-- 일지 목록 -->
     <select id="journalList" resultType="com.metanet.project.dto.JournalDTO">
         select
-            no, title
+            *
         from journal
-        where	substr(date,1,10) = #{date}
+        where	date = #{date}
     </select>
     
     <!-- 일지 세부 사항  -->
@@ -24,26 +24,49 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             no = #{no}
     </select>
     
+    <!-- 파일 관련 데이터 select -->
+	<select id="fileDetail" parameterType="int" resultType="com.metanet.project.dto.FileDTO">
+	    select
+	        *
+	    from file
+	    where
+	        jno = #{jno}
+	</select>
+    
     <!-- 일지 기록 -->
-    <insert id="journalInsert" parameterType="com.metanet.project.dto.JournalDTO">
+    <insert id="journalInsert" parameterType="com.metanet.project.dto.JournalDTO" useGeneratedKeys="true" keyProperty="no">
         insert into
-        journal (title, action, planned, description)
-        values(#{title},#{action},#{planned},#{description}) 
+        journal (no, date, title, action, planned, description, fileyn)
+        values(#{no}, #{date}, #{title},#{action},#{planned},#{description}, #{fileyn}) 
     </insert>
     
+    <!-- 파일 관련 데이터 저장 -->
+    <insert id="fileInsert" parameterType="com.metanet.project.dto.FileDTO">
+        insert into
+        file (fno, jno, filename, filerealname, fileurl)
+	    values (#{fno}, #{jno},#{fileName},#{fileRealName},#{fileUrl})
+	</insert>
+	
     <!-- 일지 수정 -->
     <update id="journalUpdate" parameterType="com.metanet.project.dto.JournalDTO">
         update journal
-            set
+            set            
             action = #{action},
             planned = #{planned},
-            description = #{description}
+            description = #{description},
+            date = #{date},
+            fileyn = #{fileyn}
         where no = #{no}
     </update>
     
     <!-- 일지 삭제 -->
     <delete id="journalDelete" parameterType="int">
         delete from journal where no = #{no}
+    </delete>
+    
+    <!-- 파일 삭제 -->
+    <delete id="fileDelete" parameterType="int">
+        delete from file where jno = #{jno};
     </delete>
 
 </mapper>

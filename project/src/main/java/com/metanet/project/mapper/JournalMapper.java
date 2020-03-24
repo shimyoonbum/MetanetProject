@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.metanet.project.dto.FileDTO;
 import com.metanet.project.dto.JournalDTO;
 
 @Repository("com.metanet.project.mapper.JournalMapper")
@@ -22,5 +23,15 @@ public interface JournalMapper {
     public int journalUpdate(JournalDTO board) throws Exception;
     
     /* 업무일지 삭제 */  
-    public int journalDelete(int bno) throws Exception;
+    public int journalDelete(int no) throws Exception;
+    
+    /* 파일 추가 */
+	public int fileInsert(FileDTO fdto) throws Exception;
+	
+	/* 파일 상세보기 */
+	public FileDTO fileDetail(int jno) throws Exception;
+
+	/* file 삭제 */  
+	public int fileDelete(FileDTO dto) throws Exception;
+
 }
