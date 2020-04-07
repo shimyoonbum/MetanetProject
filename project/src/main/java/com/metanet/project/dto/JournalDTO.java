@@ -21,4 +21,8 @@ public class JournalDTO {
 	private String description;		//비고
 	
 	private String fileyn;	//첨부파일 유무 
+	
+	private String location;	//작성위치
+	
+	private String writer;	//작성자
 }

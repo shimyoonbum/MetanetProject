@@ -25,3 +25,10 @@
 
 <!-- jQuery UI JS -->
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<!-- jQuery Timepicker JS -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+<!-- ±¸±Û ¸Ê  api -->
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFC6S717Ii4WtodYtX4aYb3EuIcP5Ofac"
+  type="text/javascript"></script>

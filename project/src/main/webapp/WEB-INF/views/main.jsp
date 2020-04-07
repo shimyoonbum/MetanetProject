@@ -77,6 +77,14 @@
 					        <label for = "dateupdate">작성일자</label>
 					        <input type="text" id="dateupdate" name="dateupdate" placeholder="날짜 넣기">	
 				        </div>
+				        <div class="form-group">
+					        <label for="location">작성위치</label>					        
+					        <textarea class="form-control" id="location" name="location" rows="2" readonly></textarea>
+				        </div>		
+				        <div class="form-group">
+					        <label for="writer">작성자</label>					        
+					        <textarea class="form-control" id="writer" name="writer" rows="1" readonly></textarea>
+				        </div>		      
 				        <div id="form-group">
 				        	<label for="filename">첨부파일</label>
 				        	<div id = "fileinfo">
@@ -85,7 +93,7 @@
 				        		<p id = "filerealname"></p>
 				        		<i class="fas fa-times" id = "filedelete"></i>	
 				        	</div>
-				        	<input type="file" name="fileupdate" id="fileupdate">	      		
+				        	<input type="file" name="fileupdate" id="fileupdate" onchange="checkFile(this);">	      		
 				        </div>
 				        <div class="form-group">
 				        	<div class = "imageupdate">
@@ -98,7 +106,7 @@
 				<div class="modal-footer">					
 					<button type="button" class="btn btn-default" data-target="#myModal" id="returnBtn">뒤로가기</button>
 					<button type="button" class="btn btn-danger" data-dismiss="modal" id="deleteBtn">삭제</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal" id="updateBtn">수정</button>					
+					<button type="button" class="btn btn-primary" data-toggle="modal" id="updateBtn">수정</button>					
 		    	</div>
 			</div>      
 	    </div>
@@ -141,7 +149,7 @@
 				        </div>
 				        <div class="form-group">
 				        	<label for=files">파일첨부</label>
-				        	<input type="file" name="files" id="files">	        	
+				        	<input type="file" name="files" id="files" onchange="checkFile(this);">	        	
 				        </div>
 				        <div class="form-group">
 				        	<div class = "image">
@@ -151,15 +159,70 @@
 					</div>
 				</form>		
 				<!-- 모달 버튼 부분-->
-				<div class="modal-footer">					
+				<div class="modal-footer">
 					<button type="button" class="btn btn-primary" data-target="#insertModal" id="insertBtn">등록</button>
 					<button type="button" class="btn btn-default" data-target="#insertModal" id="cancel">취소</button>						
 		    	</div>
 			</div>      
 	    </div>
 	</div> 
-  
-  
+	
+	<!-- 설정 모달 -->	  
+	<div class="modal fade" id="setupModal" role="dialog">
+		<div class="modal-dialog">
+	    	<!-- 모달 내용-->
+	    	<div class="modal-content">
+	    		<!-- 모달 헤더-->
+		    	<div class="modal-header">		        	         
+			        <h3 class="modal-title">알림 설정</h3>
+		        </div>
+		        <!-- 모달 내용부분-->
+				<form>				
+					<div class="modal-body">
+						<div class="form-group">
+					        <label for="alarm"><i class="fas fa-bell"></i> 알림 시간 설정</label>
+							<div class="ui-timepicker-div">					        
+					       		<input type="text" name="time" id="timepicker">
+					       		<button type="button" class="btn btn-default" data-toggle="modal" id="timesetup">설정</button>
+					       	</div>
+				        </div>	
+					</div>
+				</form>		
+				<!-- 모달 버튼 부분-->
+				<div class="modal-footer">										
+					<button type="button" class="btn btn-default" data-dismiss="modal" id="back">취소</button>						
+		    	</div>
+			</div>      
+	    </div>
+	</div>
+	
+	<div id="mySidenav" class="sidenav">
+		
+		<div class="pro" style="margin-left : 30px;">
+			<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+			
+			<div>			
+				<img id="img" src ="${pageContext.request.contextPath}${UserDTO.thumbnail}"/>			
+			</div>
+			
+			<p style="font-weight:900;font-size:30px;">${UserDTO.name}</p>
+			<p style="font-weight:500;font-size:15px;">${UserDTO.email}</p>
+		</div>  
+		
+	   	<div class="cancel">			
+			<a href="/main" class = "menu">  				
+				<i class="fas fa-pencil-alt"></i> 업무일지
+			</a>
+		    
+		    <a href="/update" class = "menu">
+		    	<i class="fas fa-tasks"></i> 작성일지보기
+		    </a>
+		    
+		    <a href="/logout" class = "menu">
+		    	<i class="fas fa-sign-out-alt"></i> 로그아웃
+		    </a>
+		</div>  	
+	</div>  
 	
 	<script type="text/javascript">
 		$(document).ready(function(){	
@@ -181,6 +244,19 @@
 		    });
 			//datepicker text 현재 날짜로 세팅한다
 		    $("#datepicker,#Idatepicker").datepicker("setDate", x);
+			
+		  	//timepicker text 현재 날짜로 세팅한다
+		    $('#timepicker').timepicker({
+		        timeFormat: 'HH:mm',
+		        interval: 30,
+		        minTime: '09',
+		        maxTime: '22',
+		        defaultTime: '17',
+		        startTime: '09:00',
+		        dynamic: false,
+		        dropdown: false,
+		        scrollbar: true
+		    });
 
 			//업무일지 조회 관련 jquery
 			$("#searchdate").click(function(){
@@ -232,6 +308,7 @@
 							const {file} = result;
 							const filelist = Object.values(file);
 							
+													
 							var img1 = "image";
 							var img2 = filelist[2];
 							var imgurl = img1.concat("/", img2);
@@ -239,7 +316,7 @@
 							//파일 확장자 소문자로 체크함
 							var fileext = imgurl.slice(imgurl.indexOf(".") + 1 ).toLowerCase();
 							
-							if(fileext != "jpg" && fileext != "png" && fileext != "jpeg" && fileext != "gif" && fileext != "bmp")
+							if(fileext != "jpg" && fileext != "png" && fileext != "jpeg" && fileext != "gif")
 								$("#imgupdate").attr("src", "image/no.gif");
 							else
 								$("#imgupdate").attr("src", imgurl);
@@ -248,7 +325,9 @@
 							$("#dateupdate").val(list[1]);
 							$("#action").val(list[3]);
 							$("#planned").val(list[4]);
-							$("#description").val(list[5]);	
+							$("#description").val(list[5]);
+							$("#location").val(list[7]);
+							$("#writer").val(list[8]);
 							//yn이랑 name은 히든 value
 							$("#fileyn").val(list[6]);	
 							$("#filename").text(filelist[2]);
@@ -265,6 +344,8 @@
 							$("#planned").val(list[4]);
 							$("#description").val(list[5]);
 							$("#fileyn").val(list[6]);	
+							$("#location").val(list[7]);
+							$("#writer").val(list[8]);
 							
 							$("#imgupdate").attr("src", "image/no.gif");
 							
@@ -302,75 +383,104 @@
 				}
 				//필수 항목인 제목과 오늘 한일을 입력해야 ajax 통신 되도록 설계
 				if(cnt == 2){
-					var formData = new FormData();
-					formData.append("Ititle", $("input[name=Ititle]").val());
-					formData.append("Iaction", $("textarea[name=Iaction]").val());
-					formData.append("Iplanned", $("textarea[name=Iplanned]").val());
-					formData.append("Idescription", $("textarea[name=Idescription]").val());
-					formData.append("Idatepicker", $("input[name=Idatepicker]").val());
-					formData.append("files", $("input[name=files]")[0].files[0]);										
-					
-					if($("input[name=files]")[0].files[0] == undefined){						
-						formData.delete("files");
-						var Ititle= $("#Ititle").val();
-						var Iaction = $("#Iaction").val();
-						var Iplanned = $("#Iplanned").val();
-						var Idescription = $("#Idescription").val();
-						var Idatepicker = $("#Idatepicker").val();
-						var obj = {		
-								"title" : Ititle,
-								"action": Iaction, 
-								"planned": Iplanned, 
-								"description": Idescription,
-								"date" : Idatepicker					
-						};						
-						$.ajax({
-							url: "/insert",
-							data: JSON.stringify(obj), // HTTP 요청과 함께 서버로 보낼 데이터
-							method: "POST", // HTTP 요청 메소드(GET, POST 등) 
-							contentType: "application/json",
-							success: function(result) {
-								alert("등록하였습니다.");					
-								$('#tablelist tbody').empty();
-								$.each(result, function(){							
-									$('#tablelist tbody').append("<tr data-toggle='modal' href='#myModal'><td>" 
-											+ this.no
-											+ "</td><td>" 
-											+ this.title 
-											+ "</td></tr>");
-								});		
-								clear();
-						    },
-						    error: function(errorThrown) {
-						        alert("서버 문제 발생. 다시 시도 바람");				        
-						    },
-						});	
-					}else{		
-						$.ajax({
-							url: "upload",
-							type: "POST",
-							data: formData,
-							processData: false,
-							contentType: false,
-							cache: false,
-							success: function(result) {
-								alert("일지 등록 및 파일 업로드 성공!");	
-								
-								$('#tablelist tbody').empty();
-								$.each(result, function(){							
-									$('#tablelist tbody').append("<tr data-toggle='modal' href='#myModal'><td>" 
-											+ this.no
-											+ "</td><td>" 
-											+ this.title 
-											+ "</td></tr>");
-								});	
-								clear();
-						    },
-						    error: function(errorThrown) {
-						    	alert("서버 문제 발생. 다시 시도 바람");				        
-						    },
-						});	
-					}
+					//구글 geolocation api 메소드 호출
+					navigator.geolocation.getCurrentPosition(function(pos){
+						//var forAddress = document.getElementById("location_hidden");
+						var latitude = pos.coords.latitude;
+						var longitude = pos.coords.longitude;
+						var geocoder = new google.maps.Geocoder();
+						//geocoder를 사용하기 위해 변수를 선언하고 구글 맵 api에서 객체를 얻어옴
+						
+						var latlng = new google.maps.LatLng(pos.coords.latitude,
+						pos.coords.longitude);
+						//위도와 경도를 구글 맵스의 geocoder에서 사용할 형식으로 변환
+						geocoder.geocode({'latLng' : latlng}, function(results, status){
+							if (status == google.maps.GeocoderStatus.OK) {
+								/*
+								좌표를 주소로 변환 시키는 geocoder를 실행
+								만약 성공적으로 변환이 되었다면, status라는 상태변수가 참이 되어 아래의 코드들이 실행됨
+								*/
+									if (results[1]) {
+										
+										var formData = new FormData();
+										formData.append("Ititle", $("input[name=Ititle]").val());
+										formData.append("Iaction", $("textarea[name=Iaction]").val());
+										formData.append("Iplanned", $("textarea[name=Iplanned]").val());
+										formData.append("Idescription", $("textarea[name=Idescription]").val());
+										formData.append("Idatepicker", $("input[name=Idatepicker]").val());
+										formData.append("files", $("input[name=files]")[0].files[0]);	
+										formData.append("location", results[0].formatted_address);
+										
+										if($("input[name=files]")[0].files[0] == undefined){						
+											formData.delete("files");
+											var Ititle= $("#Ititle").val();
+											var Iaction = $("#Iaction").val();
+											var Iplanned = $("#Iplanned").val();
+											var Idescription = $("#Idescription").val();
+											var Idatepicker = $("#Idatepicker").val();
+											var location = results[0].formatted_address;
+											var obj = {		
+													"title" : Ititle,
+													"action": Iaction, 
+													"planned": Iplanned, 
+													"description": Idescription,
+													"date" : Idatepicker,
+													"location" : location
+											};						
+											$.ajax({
+												url: "/insert",
+												data: JSON.stringify(obj), // HTTP 요청과 함께 서버로 보낼 데이터
+												method: "POST", // HTTP 요청 메소드(GET, POST 등) 
+												contentType: "application/json",
+												success: function(result) {
+													alert("등록하였습니다.");	
+													
+													$('#tablelist tbody').empty();
+													$.each(result, function(){							
+														$('#tablelist tbody').append("<tr data-toggle='modal' href='#myModal'><td>" 
+																+ this.no
+																+ "</td><td>" 
+																+ this.title 
+																+ "</td></tr>");
+													});		
+													clear();
+											    },
+											    error: function(errorThrown) {
+											        alert("서버 문제 발생. 다시 시도 바람");				        
+											    },
+											});	
+										}else{		
+											$.ajax({
+												url: "upload",
+												type: "POST",
+												data: formData,
+												processData: false,
+												contentType: false,
+												cache: false,
+												success: function(result) {
+													alert("일지 등록 및 파일 업로드 성공!");	
+													
+													$('#tablelist tbody').empty();
+													$.each(result, function(){							
+														$('#tablelist tbody').append("<tr data-toggle='modal' href='#myModal'><td>" 
+																+ this.no
+																+ "</td><td>" 
+																+ this.title 
+																+ "</td></tr>");
+													});	
+													clear();
+											    },
+											    error: function(errorThrown) {
+											    	alert("서버 문제 발생. 다시 시도 바람");				        
+											    },
+											});	
+										}
+									}
+								} else {
+									alert("Geocoder failed due to: " + status);				
+								}
+						});						
+					});	
 				}
 			});
 
@@ -379,58 +489,82 @@
 				var formData = new FormData();
 				formData.append("fileupdate", $("input[name=fileupdate]")[0].files[0]);
 				
-				if($("input[name=fileupdate]")[0].files[0] == undefined){
-						var no = $(".hidden-input").val();
-						var action = $("#action").val();
-						var planned = $("#planned").val();
-						var description = $("#description").val();
-						var date = $("#dateupdate").val();
-						var fileyn = $("#fileyn").val();
-						var obj = {
-								"no": no,
-								"action": action, 
-								"planned": planned, 
-								"description": description,
-								"date" : date,
-								"fileyn" : fileyn
-						};					
-						$.ajax({
-							url: "/update",
-							data: JSON.stringify(obj), // HTTP 요청과 함께 서버로 보낼 데이터
-							method: "POST", // HTTP 요청 메소드(GET, POST 등) 
-							contentType: "application/json",
-							success: function(result) {
-								alert("수정하였습니다.");				
-						    },
-						    error: function(errorThrown) {
-						        alert(errorThrown.statusText);				        
-						    },
-						});							
-				}else{
-					formData.append("no", $("input[name=hiddenno]").val());
-					formData.append("action", $("textarea[name=action]").val());
-					formData.append("planned", $("textarea[name=planned]").val());
-					formData.append("description", $("textarea[name=description]").val());
-					formData.append("date", $("input[name=dateupdate]").val());
-					$.ajax({
-						url: "/updateWithFile",
-						type: "POST",
-						data: formData,
-						processData: false,
-						contentType: false,
-						cache: false,
-						success: function(result) {
-							alert("일지 수정 및 파일 업로드 성공!");
-							$("#filerealname").css("display","inline");							
-							$("#filedelete").css("display","inline");
-							$("#fileupdate").css("display","none");
-							$("#fileupdate").val("");
-					    },
-					    error: function(errorThrown) {
-					    	alert("서버 문제 발생. 다시 시도 바람");				        
-					    },
+				//구글 geolocation api 메소드 호출
+				navigator.geolocation.getCurrentPosition(function(pos){
+					//var forAddress = document.getElementById("location_hidden");
+					var latitude = pos.coords.latitude;
+					var longitude = pos.coords.longitude;
+					var geocoder = new google.maps.Geocoder();
+					//geocoder를 사용하기 위해 변수를 선언하고 구글 맵 api에서 객체를 얻어옴
+					
+					var latlng = new google.maps.LatLng(pos.coords.latitude,
+					pos.coords.longitude);
+					//위도와 경도를 구글 맵스의 geocoder에서 사용할 형식으로 변환
+					
+					geocoder.geocode({'latLng' : latlng}, function(results, status){
+						if (status == google.maps.GeocoderStatus.OK) {
+							if (results[1]) {
+								if($("input[name=fileupdate]")[0].files[0] == undefined){
+									var no = $(".hidden-input").val();
+									var action = $("#action").val();
+									var planned = $("#planned").val();
+									var description = $("#description").val();
+									var date = $("#dateupdate").val();
+									var fileyn = $("#fileyn").val();
+									var location = results[0].formatted_address;
+									var obj = {
+											"no": no,
+											"action": action, 
+											"planned": planned, 
+											"description": description,
+											"date" : date,
+											"fileyn" : fileyn,
+											"location" : location
+									};					
+									$.ajax({
+										url: "/update",
+										data: JSON.stringify(obj), // HTTP 요청과 함께 서버로 보낼 데이터
+										method: "POST", // HTTP 요청 메소드(GET, POST 등) 
+										contentType: "application/json",
+										success: function(result) {
+											alert("수정하였습니다.");	
+											$("#myModal").modal("toggle");											
+									    },
+									    error: function(errorThrown) {
+									        alert(errorThrown.statusText);				        
+									    },
+									});							
+							}else{
+								formData.append("no", $("input[name=hiddenno]").val());
+								formData.append("action", $("textarea[name=action]").val());
+								formData.append("planned", $("textarea[name=planned]").val());
+								formData.append("description", $("textarea[name=description]").val());
+								formData.append("date", $("input[name=dateupdate]").val());
+								formData.append("location", results[0].formatted_address);
+								$.ajax({
+									url: "/updateWithFile",
+									type: "POST",
+									data: formData,
+									processData: false,
+									contentType: false,
+									cache: false,
+									success: function(result) {
+										alert("일지 수정 및 파일 업로드 성공!");
+										$("#myModal").modal("toggle");
+										$("#filerealname").css("display","inline");							
+										$("#filedelete").css("display","inline");
+										$("#fileupdate").css("display","none");
+										$("#fileupdate").val("");
+								    },
+								    error: function(errorThrown) {
+								    	alert("서버 문제 발생. 다시 시도 바람");				        
+								    },
+								});	
+							}
+							}
+						}
 					});	
-				}
+				});
 			});		
 
 			/*글 삭제 관련 jquery */
@@ -501,8 +635,7 @@
 			//같은 헨들러를 여러 이벤트에 등록함
 			$("#files,#fileupdate").on("change", function(event){
 				//div 내용 비워주기
-				$("#img,#imgupdate").css("display", "inline");
-			    $("#img,#imgupdate").attr("src", "image/no.gif");				
+				$("#img,#imgupdate").css("display", "inline");				
 				//파일의 정보들을 배열형태로 설정
 				var files = event.target.files;
 				var filesArr = Array.prototype.slice.call(files);				
@@ -563,7 +696,53 @@
 				$("#notitle").css("display","none");
 				$("#noaction").css("display","none");			
 			});
+			
+			/* 설정버튼 클릭시 설정 모달 나오도록 한다. */
+			$(".fa-cog").click(function(){
+				$("#setupModal").modal("toggle");
+			});
+			
+			/* 설정버튼 클릭시 시간값을 서버에 보내도록 설정 */
+			$("#timesetup").click(function(){
+				var t = $("#timepicker").val();
+				var str = t.split(':');
+				console.log(str);
+				var obj = {
+						"hour": str[0],
+						"minute" : str[1]
+				};				
+				$.ajax({
+					url: "/timesetup",
+					data: JSON.stringify(obj), // HTTP 요청과 함께 서버로 보낼 데이터
+					method: "POST", // HTTP 요청 메소드(GET, POST 등) 
+					contentType: "application/json",
+					success: function(result) {
+						alert("푸시 시간 설정 하였습니다.");	
+						$("#setupModal").modal("toggle");
+				    },
+				    error: function(errorThrown) {
+				        alert(errorThrown.statusText);				        
+				    },
+				});		
+			});				
+			
+			/* 스위치 버튼 클릭시 화면 전환 설계 */
+			var check = $("input[type='checkbox']");
+			check.click(function(){
+				$(".ui-timepicker-div").toggle();
+			});
 		});
+		
+		function checkFile(f){
+			// files 로 해당 파일 정보 얻기.
+			var file = f.files;			
+			// 정규식으로 확장자 체크
+			if(!/\.(gif|jpg|jpeg|png)$/i.test(file[0].name)) 
+				alert('이미지 파일만 선택해 주세요.\n\n현재 파일 : ' + file[0].name);			
+			else return;
+			//체크에 걸리면 선택된  내용 취소 처리. 폼을 새로 써주는 방식으로 초기화
+			f.outerHTML = f.outerHTML;
+		}	
 		
 		function clear() {
 			$("#Ititle").val("");
@@ -576,7 +755,7 @@
 			$("#notitle").css("display","none");
 			$("#noaction").css("display","none");
 			$("#insertModal").modal("toggle");
-		}
+		}		
 	</script>
 </body>
 </html>

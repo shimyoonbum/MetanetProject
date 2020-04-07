@@ -36,8 +36,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <!-- 일지 기록 -->
     <insert id="journalInsert" parameterType="com.metanet.project.dto.JournalDTO" useGeneratedKeys="true" keyProperty="no">
         insert into
-        journal (no, date, title, action, planned, description, fileyn)
-        values(#{no}, #{date}, #{title},#{action},#{planned},#{description}, #{fileyn}) 
+        journal (no, date, title, action, planned, description, fileyn, location, writer)
+        values(#{no}, #{date}, #{title},#{action},#{planned},#{description}, #{fileyn}, #{location}, #{writer}) 
     </insert>
     
     <!-- 파일 관련 데이터 저장 -->
@@ -55,7 +55,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             planned = #{planned},
             description = #{description},
             date = #{date},
-            fileyn = #{fileyn}
+            fileyn = #{fileyn},
+            location = #{location},
+            writer = #{writer}
         where no = #{no}
     </update>
     
@@ -68,5 +70,37 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <delete id="fileDelete" parameterType="int">
         delete from file where jno = #{jno};
     </delete>
-
+    
+    <!-- 시간 테이블 행 개수 파악 -->
+    <select id="timeSelect" parameterType="int" resultType="int">
+        select *
+        from time
+	</select>
+	
+	 <!-- 시간 정보 저장 -->
+    <insert id="timeInsert" parameterType="com.metanet.project.dto.TimeDTO">
+        insert into
+        time (hour, minute)
+	    values (#{hour}, #{minute})
+	</insert>
+    
+    <!-- 시간 정보 수정 -->
+    <update id="timeUpdate" parameterType="com.metanet.project.dto.TimeDTO">
+	    update time
+	    set
+	    hour = #{hour},
+	    minute = #{minute}
+	</update>
+	
+	<!-- 파일 삭제 -->
+    <delete id="timeDelete" parameterType="int">
+        delete from time;
+    </delete>
+    
+    <!-- 일지 목록 -->
+    <select id="timeInfo" resultType="com.metanet.project.dto.TimeDTO">
+        select
+            *
+        from time
+    </select>
 </mapper>

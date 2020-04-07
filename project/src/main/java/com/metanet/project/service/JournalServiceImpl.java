@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.metanet.project.controller.JournalController;
 import com.metanet.project.dto.FileDTO;
 import com.metanet.project.dto.JournalDTO;
+import com.metanet.project.dto.TimeDTO;
 import com.metanet.project.mapper.JournalMapper;
 
 @Service("com.metanet.project.service.JournalService")
@@ -92,4 +93,36 @@ public class JournalServiceImpl implements JournalService {
 		//db 테이블 정보 삭제
 		return mapper.fileDelete(dto);
 	}
+
+	@Override
+	public void timeService(TimeDTO dto) throws Exception {
+		mapper.timeUpdate(dto);		
+	}
+
+	@Override
+	public void timeInsert(TimeDTO dto) throws Exception {
+		mapper.timeInsert(dto);		
+	}
+
+	@Override
+	public Integer timeSelect() throws Exception {
+		// TODO Auto-generated method stub
+		return mapper.timeSelect();
+	}
+
+	@Override
+	public void timeUpdate(TimeDTO dto) throws Exception {
+		mapper.timeUpdate(dto);		
+	}
+
+	@Override
+	public TimeDTO timeInfo() throws Exception {
+		// TODO Auto-generated method stub
+		return mapper.timeInfo();		
+	}
+
+	@Override
+	public void timeDelete() throws Exception {
+		mapper.timeDelete();		
+	}	
 }

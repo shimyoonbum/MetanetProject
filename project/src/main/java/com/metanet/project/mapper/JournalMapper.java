@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com.metanet.project.dto.FileDTO;
 import com.metanet.project.dto.JournalDTO;
+import com.metanet.project.dto.TimeDTO;
 
 @Repository("com.metanet.project.mapper.JournalMapper")
 public interface JournalMapper {
@@ -33,5 +34,18 @@ public interface JournalMapper {
 
 	/* file 삭제 */  
 	public int fileDelete(FileDTO dto) throws Exception;
+	
+	/* 시간 수정 */
+	public void timeUpdate(TimeDTO dto) throws Exception;
+	
+	/* 시간 설정 */
+	public void timeInsert(TimeDTO dto) throws Exception;
+	
+	/* 시간 테이블 조사 */
+	public Integer timeSelect() throws Exception;
+	
+	/* 시간 삭제 */
+	public void timeDelete() throws Exception;
 
+	public TimeDTO timeInfo() throws Exception;
 }

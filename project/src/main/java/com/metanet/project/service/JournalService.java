@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.metanet.project.dto.FileDTO;
 import com.metanet.project.dto.JournalDTO;
+import com.metanet.project.dto.TimeDTO;
 
 public interface JournalService {
 
@@ -24,6 +25,18 @@ public interface JournalService {
 	int journalDeleteService(int no) throws Exception;
 
 	int fileDeleteService(FileDTO dto) throws Exception;
+
+	void timeService(TimeDTO dto) throws Exception;
+
+	void timeInsert(TimeDTO dto) throws Exception;
+
+	Integer timeSelect() throws Exception;
+
+	void timeUpdate(TimeDTO dto) throws Exception;
+
+	TimeDTO timeInfo() throws Exception;
+
+	void timeDelete() throws Exception;
 
 	
 
