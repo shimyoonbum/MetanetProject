@@ -8,6 +8,18 @@ html, body {
             box-sizing: border-box;
      		word-break : break-all; 
 }
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: center;
+  padding: 8px;
+}
         
 #start{
 	width:80%;
@@ -30,6 +42,12 @@ html, body {
 	background:white; 
 	height : 320px; 
 	box-shadow: 5px 5px 5px;
+}
+
+.enters{
+	border : black 1px solid;
+	margin : 10px;
+	padding : 10px;
 }
 
 /* 상단바 헤더로 정의해서 화면 고정 처리*/
@@ -68,7 +86,8 @@ header{position : fixed; top : 0; left : 0; right : 0; z-index : 1;}
 #fileupdate{padding-top : 10px; display:none;}
 
 /*썸네일 관련 css */
-#img{width:120; height:120; border-radius: 70%; overflow: hidden;}
+#img{width:200; height:200;}
+#imgprofile{width:120; height:120; border-radius: 70%; overflow: hidden;}
 #imgupdate{width:200; height:200; margin-top:20px}
 .cancel{border-top:ridge; margin-top:30px;}
 /*페이지 제목 위치 관련 css*/

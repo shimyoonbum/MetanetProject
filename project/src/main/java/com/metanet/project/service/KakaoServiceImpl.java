@@ -21,7 +21,6 @@ public class KakaoServiceImpl implements KakaoService {
 	@Override
 	public String getAccessToken (String authorize_code) {
         String access_Token = "";
-        String refresh_Token = "";
         String reqURL = "https://kauth.kakao.com/oauth/token";
         
         try {
@@ -61,7 +60,6 @@ public class KakaoServiceImpl implements KakaoService {
             JsonElement element = parser.parse(result);
             
             access_Token = element.getAsJsonObject().get("access_token").getAsString();
-            refresh_Token = element.getAsJsonObject().get("refresh_token").getAsString();
             
             System.out.println("access_token : " + access_Token);
             
@@ -86,9 +84,7 @@ public class KakaoServiceImpl implements KakaoService {
 	        conn.setRequestMethod("POST");
 	        
 	        //요청에 필요한 Header에 포함될 내용
-	        conn.setRequestProperty("Authorization", "Bearer " + access_Token);
-	        System.out.println("conn : " + conn);
-	        
+	        conn.setRequestProperty("Authorization", "Bearer " + access_Token);	        
 	        
 	        int responseCode = conn.getResponseCode();
 	        System.out.println("responseCode : " + responseCode);
@@ -106,18 +102,15 @@ public class KakaoServiceImpl implements KakaoService {
 	        JsonParser parser = new JsonParser();
 	        JsonElement element = parser.parse(result);
 	        
+	        //이름과 이메일을 얻어오는 부분
 	        JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
 	        JsonObject kakao_account = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
-	        	        	        
-	        System.out.println("properties : " + properties);
-	        System.out.println("kakao_account : " + kakao_account);
 	        
 	        String nickname = properties.get("nickname").getAsString();
 	        String email = kakao_account.getAsJsonObject().get("email").getAsString();
 	        
-	        JsonObject profile = kakao_account.getAsJsonObject().get("profile").getAsJsonObject();
-	        
-	        System.out.println("profile : " + profile);
+	        //썸네일을 얻어오는 부분
+	        JsonObject profile = kakao_account.getAsJsonObject().get("profile").getAsJsonObject();	        
 	        String thumbnail = profile.getAsJsonObject().get("thumbnail_image_url").getAsString();
 	        	        
 	        userInfo.put("nickname", nickname);
@@ -151,7 +144,6 @@ public class KakaoServiceImpl implements KakaoService {
 	        while ((line = br.readLine()) != null) {
 	            result += line;
 	        }
-	        System.out.println(result);
 	    } catch (IOException e) {
 	        // TODO Auto-generated catch block
 	        e.printStackTrace();

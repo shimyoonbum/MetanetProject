@@ -36,7 +36,7 @@
 				<col width="80%">					
 			</colgroup>
 			  	<thead>
-			        <tr>
+			        <tr style="border-top:3px solid #eee;">
 				       	<th scpoe="col">번호</th>
 				        <th scpoe="col">제목</th>					       
 				    </tr>
@@ -202,7 +202,7 @@
 			<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 			
 			<div>			
-				<img id="img" src ="${pageContext.request.contextPath}${UserDTO.thumbnail}"/>			
+				<img id="imgprofile" src ="${pageContext.request.contextPath}${UserDTO.thumbnail}"/>			
 			</div>
 			
 			<p style="font-weight:900;font-size:30px;">${UserDTO.name}</p>
@@ -211,10 +211,10 @@
 		
 	   	<div class="cancel">			
 			<a href="/main" class = "menu">  				
-				<i class="fas fa-pencil-alt"></i> 업무일지
+				<i class="fas fa-pencil-alt"></i> 업무일지관리
 			</a>
 		    
-		    <a href="/update" class = "menu">
+		    <a href="/list" class = "menu">
 		    	<i class="fas fa-tasks"></i> 작성일지보기
 		    </a>
 		    
@@ -308,7 +308,7 @@
 							const {file} = result;
 							const filelist = Object.values(file);
 							
-													
+							console.log(filelist);						
 							var img1 = "image";
 							var img2 = filelist[2];
 							var imgurl = img1.concat("/", img2);

@@ -7,6 +7,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <!-- mapper 클래스 선언 -->
 <mapper namespace="com.metanet.project.mapper.JournalMapper">
  	    
+ 	<!-- 일지 목록 조건 -->
+    <select id="journalSearch" resultType="com.metanet.project.dto.ListDTO">
+        <![CDATA[
+       select a.no, a.date, a.title, a.writer, a.location, a.action, a.fileyn, b.fileurl, b.filename 
+       from journal as a left join file as b 
+       on a.no = b.jno 
+       order by date desc
+       limit 0,5;
+        ]]>
+    </select>
+    
+    <!-- 일지 목록 조건 -->
+    <select id="journalNext" parameterType="com.metanet.project.dto.NumDTO" resultType="com.metanet.project.dto.ListDTO">
+        <![CDATA[
+       select a.no, a.date, a.title, a.writer, a.location, a.action, a.fileyn, b.fileurl, b.filename 
+       from journal as a left join file as b 
+       on a.no = b.jno 
+       order by date desc
+        limit #{num},5;
+        ]]>
+    </select>
+    
     <!-- 일지 목록 -->
     <select id="journalList" resultType="com.metanet.project.dto.JournalDTO">
         select
@@ -102,5 +124,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select
             *
         from time
+    </select>
+    
+     <!-- 토큰 저장 -->
+    <insert id="tokenUpdate" parameterType="com.metanet.project.dto.TokenDTO">
+        insert ignore into
+        token (token, userId)
+	    values (#{token}, #{userID})
+	</insert>
+	
+	<!-- 일지 목록 -->
+    <select id="tokenSelect" resultType="java.util.Map">
+        select distinct token
+        from token
+    </select>
+    
+    <!-- 일지 목록 -->
+    <select id="tokenSelectById" parameterType="com.metanet.project.dto.TokenDTO" resultType="java.util.Map">
+        select distinct token
+        from token where userId = #{userID}
     </select>
 </mapper>

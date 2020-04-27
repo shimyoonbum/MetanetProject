@@ -2,6 +2,7 @@ package com.metanet.project.service;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -14,7 +15,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.metanet.project.controller.JournalController;
 import com.metanet.project.dto.FileDTO;
 import com.metanet.project.dto.JournalDTO;
+import com.metanet.project.dto.ListDTO;
+import com.metanet.project.dto.NumDTO;
 import com.metanet.project.dto.TimeDTO;
+import com.metanet.project.dto.TokenDTO;
 import com.metanet.project.mapper.JournalMapper;
 
 @Service("com.metanet.project.service.JournalService")
@@ -28,6 +32,18 @@ public class JournalServiceImpl implements JournalService {
 	@Override
 	public List<JournalDTO> journalListService(String date) throws Exception {		
 		return mapper.journalList(date);
+	}
+	
+	@Override
+	public List<ListDTO> journalSearchService() throws Exception {
+		// TODO Auto-generated method stub
+		return mapper.journalSearch();		
+	}
+
+	@Override
+	public List<ListDTO> journalNextService(NumDTO dto) throws Exception {
+		// TODO Auto-generated method stub
+		return mapper.journalNext(dto);
 	}
 	
     @Override
@@ -125,4 +141,20 @@ public class JournalServiceImpl implements JournalService {
 	public void timeDelete() throws Exception {
 		mapper.timeDelete();		
 	}	
+
+	@Override
+	public void tokenUpdate(TokenDTO dto) throws Exception {
+		mapper.tokenUpdate(dto);		
+	}
+
+	@Override
+	public List<Map<String, Object>> tokenSelect() throws Exception {
+		return mapper.tokenSelect();	
+	}
+
+	@Override
+	public List<Map<String, Object>> tokenSelectById(TokenDTO dto) throws Exception {
+		// TODO Auto-generated method stub
+		return mapper.tokenSelectById(dto);
+	}
 }
