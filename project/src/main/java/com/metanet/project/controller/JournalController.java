@@ -40,9 +40,9 @@ public class JournalController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(JournalController.class);
 	//현재 디바이스 토큰
-	private String token;
-	//디비에 등록되있는 토큰 값
-	private List<String> tokenlist;
+	private TokenDTO token;
+	
+	ThreadLocal<String> local = new ThreadLocal<String>();
     
 	@Resource(name="com.metanet.project.service.JournalService")
 	JournalService service;
@@ -62,8 +62,6 @@ public class JournalController {
     	String access_Token = kakao.getAccessToken(code);
     	HashMap<String, Object> userInfo = kakao.getUserInfo(access_Token);
     	
-    	System.out.println("login Controller : " + userInfo);
-    	
     	//클라이언트의 이메일이 존재할 때 세션에 토큰 등록 및 token DB 세팅
     	if (userInfo.get("email") != null) {
     		session.setAttribute("name", userInfo.get("nickname"));
@@ -71,7 +69,7 @@ public class JournalController {
     		session.setAttribute("thumbnail", userInfo.get("thumbnail"));
     		session.setAttribute("access_Token", access_Token);
     	}
-		return "index";
+		return "start";
     }
     
     @RequestMapping(value="/logout")
@@ -94,37 +92,45 @@ public class JournalController {
 		user.setThumbnail((String) session.getAttribute("thumbnail"));
 		
 		TokenDTO dto = new TokenDTO();
-		dto.setUserID((String) session.getAttribute("email"));
-		dto.setToken(token);
+		dto.setUserID((String) session.getAttribute("email"));		
+		
+		local.set(token.getToken());
+		dto.setToken(local.get());
+		
+		logger.info(dto.toString());
 		
 		//token 및 접속 유저 값 서버에 전송
     	service.tokenUpdate(dto);
-    	
-    	List<Map<String, Object>> list = service.tokenSelect(); 
-    	tokenlist = new ArrayList<String>();       
-    	   for(Map map: list){ // loop through the maps
-    		   tokenlist.addAll(map.values()); // append the values in listOfValue
-    	}
     	
 		model.addObject("UserDTO", user);
 		model.setViewName("main");		
         return model; //생성한 main.jsp
     }	
 	
+	/* sidebar 프로필 관련 호출 */ 
+    @RequestMapping(value = "/sidebar", method = RequestMethod.GET)
+    @ResponseBody
+    private Map<String, String> sidebar(HttpSession session) throws Exception{
+    	Map<String, String> result = new HashMap<>();
+    	result.put("img", (String) session.getAttribute("thumbnail"));
+    	result.put("name", (String) session.getAttribute("name"));
+    	result.put("email", (String) session.getAttribute("email"));
+    	
+		return result;    	
+    }
+	
 	/* 업무일지 처음 5개 가져오기 화면 */ 
     @RequestMapping("/list")
-    public ModelAndView list(ModelAndView model, HttpSession session) throws Exception {
-    	UserDTO user = new UserDTO();
-		user.setEmail((String) session.getAttribute("email"));
-		user.setName((String) session.getAttribute("name"));
-		user.setThumbnail((String) session.getAttribute("thumbnail"));
-		model.addObject("UserDTO", user);
-		
-		List<ListDTO> listDTO = service.journalSearchService();
-		model.addObject("listDTO", listDTO);
-		
+    public ModelAndView list(ModelAndView model, HttpSession session) throws Exception {		
 		model.setViewName("list");		
         return model; //생성한 list.jsp
+    }
+    
+    /* 업무일지 처음 5개 가져오기 ajax */ 
+    @RequestMapping("/list5")
+    @ResponseBody
+    public List<ListDTO> list5(HttpSession session) throws Exception {			    	
+		return service.journalSearchService();
     }
     
     /* 업무일지 다음 5개 가져오기 ajax */ 
@@ -281,6 +287,13 @@ public class JournalController {
 		vo.setUserID((String) session.getAttribute("email"));
     	//객체를 통해 토큰 리스트를 얻어내도록 서비스에 객체 전송
 		List<Map<String, Object>> userToken = service.tokenSelectById(vo);
+		
+		List<Map<String, Object>> list = service.tokenSelect(); 
+		
+		List<String> tokenlist = new ArrayList<String>();       
+    	   for(Map map: list){ // loop through the maps
+    		   tokenlist.addAll(map.values()); // append the values in listOfValue
+    	}
 		//유저의 토큰 리스트
     	List<String> userlist = new ArrayList<String>();       
     	   for(Map map: userToken){ // loop through the maps
@@ -289,6 +302,8 @@ public class JournalController {
     	
     	//현재 디바이스의 토큰값을 리스트에서 제외시킴
     	tokenlist.removeAll(userlist);
+    	
+    	logger.info(tokenlist.toString());
     	
     	String title = "업무일지 작성 알림";
     	String content = (String) session.getAttribute("name") + "님이 업무일지를 작성하셨습니다.";
@@ -332,24 +347,16 @@ public class JournalController {
     	List<String> userlist = new ArrayList<String>();       
     	   for(Map map: userToken){ // loop through the maps
     		   userlist.addAll(map.values()); // append the values in listOfValue
-    	} 	
-    	
-    	//현재 디바이스의 토큰값을 리스트에서 제외시킴
-    	tokenlist.removeAll(userlist);
-    	
-    	String title = "업무일지 작성 알림";
-    	String content = (String) session.getAttribute("name") + "님이 업무일지를 작성하셨습니다.";
-    	
-    	FCMUtil fcm = new FCMUtil();
-    	if(!tokenlist.isEmpty())
-    		fcm.send_FCM(tokenlist, title, content);
+    	}
     		 		
         return service.journalListService(dto.getDate());
     }    
     
-    /* 안드로이드 토큰 값 DB에 저장 */ 
+    /* 안드로이드 토큰 값 저장 */ 
     @RequestMapping(value = "/token", method = RequestMethod.POST)
     private void token(TokenDTO vo) throws Exception{
-    	token = vo.getToken();
+    	token = new TokenDTO();
+    	token.setToken(vo.getToken());
+    	logger.info(token.toString());
     }  
 }

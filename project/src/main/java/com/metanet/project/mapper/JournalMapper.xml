@@ -133,6 +133,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	    values (#{token}, #{userID})
 	</insert>
 	
+	<!-- 토큰 개수 파악 -->
+    <select id="tokenCount" resultType="Integer">
+        select count(*) from token
+    </select>
+	
 	<!-- 일지 목록 -->
     <select id="tokenSelect" resultType="java.util.Map">
         select distinct token

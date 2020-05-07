@@ -1,7 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>    
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-
 <%@ taglib prefix="layoutTag" tagdir="/WEB-INF/tags"%>
 
 <layoutTag:layout>
@@ -13,6 +11,7 @@
     <title>미니 프로젝트</title>	
 </head>
 <body>
+`	<!-- 화면 제목 및 검색 결과 출력 테이블 -->	
 	<div>
  		<h2 class = "title">업무 일지 작성 내역</h2>
 	</div>	
@@ -195,37 +194,25 @@
 			</div>      
 	    </div>
 	</div>
-	
-	<div id="mySidenav" class="sidenav">
-		
-		<div class="pro" style="margin-left : 30px;">
-			<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-			
-			<div>			
-				<img id="imgprofile" src ="${pageContext.request.contextPath}${UserDTO.thumbnail}"/>			
-			</div>
-			
-			<p style="font-weight:900;font-size:30px;">${UserDTO.name}</p>
-			<p style="font-weight:500;font-size:15px;">${UserDTO.email}</p>
-		</div>  
-		
-	   	<div class="cancel">			
-			<a href="/main" class = "menu">  				
-				<i class="fas fa-pencil-alt"></i> 업무일지관리
-			</a>
-		    
-		    <a href="/list" class = "menu">
-		    	<i class="fas fa-tasks"></i> 작성일지보기
-		    </a>
-		    
-		    <a href="/logout" class = "menu">
-		    	<i class="fas fa-sign-out-alt"></i> 로그아웃
-		    </a>
-		</div>  	
-	</div>  
+	 
 	
 	<script type="text/javascript">
 		$(document).ready(function(){	
+			$.ajax({
+				url: "/sidebar",
+				method : "GET",
+				async: false,
+				contentType: "application/json",
+				success: function(result) {
+					$("#imgprofile").attr("src", result.img);
+					$("#name").text(result.name);
+					$("#email").text(result.email);
+			    },
+			    error: function(request, status, error) {
+			        alert("message : " + request.responseText+"\n" + "error : " + error);
+			    }
+			});
+			
 			var x = new Date();
 			//datepicker 설정
 			$("#datepicker,#Idatepicker, #dateupdate").datepicker({

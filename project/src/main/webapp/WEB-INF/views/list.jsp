@@ -13,55 +13,63 @@
     <title>미니 프로젝트</title>
 </head>
 <body>
-	<h2 class = "title"> 업무일지 작성 목록 </h2>
-		<div class="enters">
-			<c:forEach items="${listDTO}" var="listDTO">			
-				<li>작성날짜 : ${listDTO.date}</li>
-			  	<li>작성자 : ${listDTO.writer}</li>
-			  	<li>작성위치 : ${listDTO.location}</li>  		
-			  	<li>제목 : ${listDTO.title}</li>
-			  	<li>수행업무 : ${listDTO.action}</li>
-			  	<c:if test="${listDTO.fileyn eq 'Y'}">
-			  		<li>첨부파일 : <img id="img" src ="image/${listDTO.fileName}"/></li>
-			  	</c:if>
-			  	<c:if test="${listDTO.fileyn eq 'N'}">
-			  		<li>첨부파일 : <img id="img" src ="image/no.gif"/></li>
-			  	</c:if>
-			  	
-			  	<br><br>			
-			</c:forEach>
-		</div>
-		
-		<div id="mySidenav" class="sidenav">
-		
-		<div class="pro" style="margin-left : 30px;">
-			<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+	<h2 class = "title"> 업무일지 작성 목록 </h2>		
+	<div class="container-fluid gedf-wrapper">
+        <div class="row">
+                        
+        </div>
+    </div>
 			
-			<div>			
-				<img id="imgprofile" src ="${pageContext.request.contextPath}${UserDTO.thumbnail}"/>			
-			</div>
-			
-			<p style="font-weight:900;font-size:30px;">${UserDTO.name}</p>
-			<p style="font-weight:500;font-size:15px;">${UserDTO.email}</p>
-		</div>  
-		
-	   	<div class="cancel">			
-			<a href="/main" class = "menu">  				
-				<i class="fas fa-pencil-alt"></i> 업무일지관리
-			</a>
-		    
-		    <a href="/list" class = "menu">
-		    	<i class="fas fa-tasks"></i> 작성일지보기
-		    </a>
-		    
-		    <a href="/logout" class = "menu">
-		    	<i class="fas fa-sign-out-alt"></i> 로그아웃
-		    </a>
-		</div>  	
-	</div>  
-	
 	<script type="text/javascript">
-		$(document).ready(function(){
+		$(document).ready(function(){			
+			$.ajax({
+				url: "/sidebar",
+				method : "GET",
+				async: false,
+				contentType: "application/json",
+				success: function(result) {
+					$("#imgprofile").attr("src", result.img);
+					$("#name").text(result.name);
+					$("#email").text(result.email);
+			    },
+			    error: function(request, status, error) {
+			        alert("message : " + request.responseText+"\n" + "error : " + error);
+			    }
+			});
+			
+			$.ajax({
+				url: "/list5",
+				method : "GET",
+				async: false,
+				contentType: "application/json",
+				success: function(val) {
+					$.each(val, function(i, result){	
+						console.log(result)
+						var str = ""
+						
+						if(result.fileName == undefined){
+							result.fileName = "no.gif"
+						}						
+						
+						str += "<div class=\"col-md-6 gedf-main\" style='padding:20px;'><div class=\"card gedf-card\"><div class='card-header' style='background:beige;'>"
+							+ "<div class='d-flex justify-content-between align-items-center'>"
+	                        + "<div class='d-flex justify-content-between align-items-center'>"
+	                        + "<div class=\"ml-2\"><div class=\"h5 m-0\"><i class=\"fas fa-user-edit\"></i>  " 
+	                        + result.writer + "</div><div class=\"h7 text-muted\"><i class=\"fas fa-location-arrow\"></i>  " + result.location +"</div></div></div></div></div>"
+	                        + "<div class=\"card-body\"><div class=\"text-muted h7 mb-2\"><i class=\"fa fa-clock-o\"></i>  "+ result.date +"</div>"
+	                        + "<a class=\"card-link\" href=\"#\"><h5 class=\"card-title\">"+ result.title +"</h5></a>"
+	                        + "<p class=\"card-text\">" + result.action + "</p></div>"
+	                        + "<div class=\"card-footer\" style=\"background:#4253; text-align:center;\"><img id=\"img\" src='image/" + result.fileName + "'/><br>"
+	                        + "<a href=\"#\" class=\"card-link\"><i class=\"fa fa-gittip\"></i> Like</a></div>"   
+	                        + "</div></div>"
+                
+						$(".row").append(str);
+					});	
+			    },
+			    error: function(request, status, error) {
+			        alert("message : " + request.responseText+"\n" + "error : " + error);
+			    }
+			});
 			//현재 스크롤 탑 0 초기화
 			var lastScrollTop = 0;
 			var selectNum = 5;
@@ -78,23 +86,26 @@
 							method: "POST", // HTTP 요청 메소드(GET, POST 등) 
 							contentType: "application/json",
 							async: false,
-							success: function(result) {								
+							success: function(val) {								
 								var str = "";								
-								if(result != ""){
-									$(result).each(function(){
-										if(this.fileName == null)
-											this.fileName = "no.gif";	
+								if(val != ""){
+									$.each(val, function(i, result){
+										if(result.fileName == undefined)
+											result.fileName = "no.gif";	
 										
-										str += "<div id=" + "'enters'" + ">"
-										+ "<li>작성날짜 : " + this.date + "</li>"
-										+ "<li>작성자 : " + this.writer + "</li>"
-										+ "<li>작성위치 : " + this.location + "</li>"
-										+ "<li>제목 : " + this.title + "</li>"
-										+ "<li>수행업무 : " + this.action + "</li>"
-										+ "<li>첨부파일 : <img id='img' src=image/" + this.fileName + "/></li>"
-										+ "</div><br><br>";
+										str += "<div class=\"col-md-6 gedf-main\" style='padding:20px;'><div class=\"card gedf-card\"><div class='card-header' style='background:beige;'>"
+											+ "<div class='d-flex justify-content-between align-items-center'>"
+					                        + "<div class='d-flex justify-content-between align-items-center'>"
+					                        + "<div class=\"ml-2\"><div class=\"h5 m-0\"><i class=\"fas fa-user-edit\"></i>  " 
+					                        + result.writer + "</div><div class=\"h7 text-muted\"><i class=\"fas fa-location-arrow\"></i>  " + result.location +"</div></div></div></div></div>"
+					                        + "<div class=\"card-body\"><div class=\"text-muted h7 mb-2\"><i class=\"fa fa-clock-o\"></i>  "+ result.date +"</div>"
+					                        + "<a class=\"card-link\" href=\"#\"><h5 class=\"card-title\">"+ result.title +"</h5></a>"
+					                        + "<p class=\"card-text\">" + result.action + "</p></div>"
+					                        + "<div class=\"card-footer\" style=\"background:#4253; text-align:center;\"><img id=\"img\" src='image/" + result.fileName + "'/><br>"
+					                        + "<a href=\"#\" class=\"card-link\"><i class=\"fa fa-gittip\"></i> Like</a></div>"   
+					                        + "</div></div>"
 									});
-									$("div.enters:last").append(str);
+									$(".row:last").append(str);
 								}
 								else{
 									return false;	//이벤트 종료

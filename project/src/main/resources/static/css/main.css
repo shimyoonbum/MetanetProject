@@ -149,3 +149,23 @@ header{position : fixed; top : 0; left : 0; right : 0; z-index : 1;}
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
 }
+
+.gedf-wrapper {
+            margin-top: 0.97rem;
+}
+
+@media (min-width: 992px) {
+   .gedf-main {
+       padding-left: 4rem;
+       padding-right: 4rem;
+   }
+   .gedf-card {
+       margin-bottom: 2.77rem;
+   }
+}
+
+    /**Reset Bootstrap*/
+.dropdown-toggle::after {
+   content: none;
+   display: none;
+}

@@ -21,10 +21,8 @@
 		<div id ="index">		
 			<img src="/image/metanet.jpg" style="width: 100%; height: auto;">	
 			<h1 style="text-align:center; color:cornflowerblue">일일 업무 일지 작성</h1>	
-			<div style="padding-top:70px;">	
-				<a href="https://kauth.kakao.com/oauth/authorize?client_id=65d0922e1689187bfa35034a01cc52b1&redirect_uri=https://192.5.105.160:8000/oauth&response_type=code">
-			       <img src="/image/kakao_login_btn_medium_wide.png" style="width: 90%; height: auto; text-align:center">
-			    </a>
+			<div style="padding-top:70px;">
+				<input type="button" id="start" value="시작하기" onclick="location.href='/main'">
 			</div>	
 		</div>
 	</div>
